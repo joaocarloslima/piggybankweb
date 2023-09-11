@@ -11,7 +11,7 @@ export default async function Home() {
     <>
       <NavBar active={"contas"} />
 
-      <main className="bg-slate-900 m-20 p-12 rounded-xl">
+      <main className="bg-slate-900 mt-20 m-auto max-w-lg p-12 rounded-xl">
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-bold">Contas</h2>
           <Button href="/contas/new" icon={<CreditCardIcon className="h-6 w-6" />}>
