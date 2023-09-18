@@ -12,7 +12,7 @@ export default function DataRow({conta}) {
             <div className="flex items-center">
                 <span>R$ {saldo.toFixed(2)}</span>
                 <span className="invisible group-hover/row:visible" >
-                    <DropMenu />    
+                    <DropMenu conta={conta}/>    
                 </span>
             </div>
         </div>

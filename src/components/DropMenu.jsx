@@ -5,16 +5,48 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { ChevronDown } from 'lucide-react';
+import { destroy } from '@/actions/contas';
+import toast from 'react-hot-toast';
 
-export default function DropMenu() {
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { useRouter } from 'next/navigation';
+
+
+export default function DropMenu({ conta }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const { push } = useRouter()
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleDelete = async () => {
+    const resp = await destroy(conta.id)
+    if (resp?.error) {
+      toast.error(resp.error, { style: { background: '#333', color: '#FFF' } })
+      return
+    }
+    toast.success("conta apagada com sucesso", { style: { background: '#333', color: '#FFF' } })
+  }
+
+  const handleEdit = () => {
+    push(`/contas/${conta.id}/edit`)
+  }
+
 
   return (
     <div>
@@ -36,8 +68,26 @@ export default function DropMenu() {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>apagar</MenuItem>
-        <MenuItem onClick={handleClose}>editar</MenuItem>
+        <AlertDialog>
+          <AlertDialogTrigger>
+            <MenuItem>apagar</MenuItem>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Essa ação não pode ser desfeita. Todos os dados da conta serão perdidos.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>cancelar</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDelete}>sim, pode apagar essa conta</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        
+        <MenuItem onClick={handleEdit}>editar</MenuItem>
       </Menu>
     </div>
   );
